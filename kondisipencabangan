@@ -1,0 +1,235 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/*
+ * TUGAS PERTEMUAN KE 3 - KONDISI / PERCABANGAN
+ * Jalankan program, lalu pilih nomor soal (1-5) dari menu.
+ */
+public class TugasKondisi {
+
+    static Scanner in = new Scanner(System.in);
+
+    // ===================== MENU UTAMA =====================
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println();
+            System.out.println("=== TUGAS PERTEMUAN KE 3 ===");
+            System.out.println("1. Deteksi Anggota Mafia");
+            System.out.println("2. Penerimaan Calon Programmer");
+            System.out.println("3. Nomor Punggung PERSEGI FC");
+            System.out.println("4. Kalkulator Kalori Olahraga");
+            System.out.println("5. Tarif Disney Island");
+            System.out.println("0. Keluar");
+            int pilihan = bacaInt("Pilih soal : ");
+            System.out.println();
+
+            switch (pilihan) {
+                case 1: soal1(); break;
+                case 2: soal2(); break;
+                case 3: soal3(); break;
+                case 4: soal4(); break;
+                case 5: soal5(); break;
+                case 0: System.out.println("Terima kasih."); return;
+                default: System.out.println("Pilihan tidak tersedia.");
+            }
+        }
+    }
+
+    // ===================== SOAL 1 : MAFIA =====================
+    static void soal1() {
+        String nama = bacaString("Nama : ");
+        int umur = bacaInt("Umur : ");
+        String tempat = bacaString("Tempat Tinggal : ");
+        double tabungan = bacaDouble("Uang Tabungan (dollar) : ");
+
+        String pangkat = null;
+
+        if (umur > 40
+                && cocok(tempat, "Nevada", "New York", "Havana")
+                && tabungan > 10000000) {
+            pangkat = "Don";
+        } else if (umur >= 25 && umur <= 40
+                && cocok(tempat, "New Jersey", "Manhattan", "Nevada")
+                && tabungan >= 1000000 && tabungan <= 2000000) {
+            pangkat = "Underboss";
+        } else if (umur >= 18 && umur <= 24
+                && cocok(tempat, "California", "Detroit", "Boston")
+                && tabungan < 1000000) {
+            pangkat = "Capo";
+        }
+
+        if (pangkat != null) {
+            System.out.println(nama + " kemungkinan adalah seorang anggota mafia dengan " + pangkat + ".");
+        } else {
+            System.out.println(nama + " tidak mencurigakan.");
+        }
+    }
+
+    // true jika teks sama dengan salah satu pilihan (tanpa membedakan huruf besar/kecil)
+    static boolean cocok(String teks, String... pilihan) {
+        for (String p : pilihan) {
+            if (teks.equalsIgnoreCase(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ===================== SOAL 2 : CALON PROGRAMMER =====================
+    static void soal2() {
+        double nilaiCoding = bacaDouble("Nilai coding (0-100) : ");
+        String nilaiInterview = bacaString("Nilai interview (A/B/C/...) : ");
+
+        if (nilaiCoding < 0 || nilaiCoding > 100) {
+            System.out.println("Nilai coding harus berada di antara 0 sampai 100.");
+            return;
+        }
+
+        String hasilCoding;
+        if (nilaiCoding > 80) {
+            hasilCoding = "LOLOS";
+        } else if (nilaiCoding >= 60) {
+            hasilCoding = "DIPERTIMBANGKAN";
+        } else {
+            hasilCoding = "GAGAL";
+        }
+
+        boolean lolosInterview = nilaiInterview.equalsIgnoreCase("A")
+                || nilaiInterview.equalsIgnoreCase("B");
+
+        System.out.println("Hasil tes coding    : " + hasilCoding);
+        System.out.println("Hasil tes interview : " + (lolosInterview ? "LOLOS" : "GAGAL"));
+
+        if ((hasilCoding.equals("LOLOS") || hasilCoding.equals("DIPERTIMBANGKAN")) && lolosInterview) {
+            System.out.println("Selamat Kamu Berhasil Menjadi Calon Programmer");
+        } else {
+            System.out.println("Maaf Kamu Belum Berhasil Menjadi Calon Programmer");
+        }
+    }
+
+    // ===================== SOAL 3 : NOMOR PUNGGUNG =====================
+    static void soal3() {
+        int nomor = bacaInt("Nomor punggung : ");
+        if (nomor <= 0) {
+            System.out.println("Nomor punggung harus bilangan positif.");
+            return;
+        }
+
+        ArrayList<String> posisi = new ArrayList<>();
+
+        if (nomor % 2 == 0) {
+            posisi.add("Target Attacker");
+            if (nomor >= 50 && nomor <= 100) {
+                posisi.add("Berhak dipilih menjadi Kapten Tim");
+            }
+        } else {
+            posisi.add("Defender");
+            if (nomor > 90) {
+                posisi.add("Playmaker");
+            }
+            if (nomor % 3 == 0 && nomor % 5 == 0) {
+                posisi.add("Keeper");
+            }
+        }
+
+        System.out.println("Nomor punggung " + nomor + " dapat berfungsi sebagai:");
+        for (String p : posisi) {
+            System.out.println("- " + p);
+        }
+    }
+
+    // ===================== SOAL 4 : KALORI OLAHRAGA =====================
+    static void soal4() {
+        System.out.println("Masukkan lama waktu tiap olahraga dalam menit (isi 0 jika tidak dilakukan)");
+        double menitLari = bacaDouble("Lari (menit)    : ");
+        double menitPushUp = bacaDouble("Push-up (menit) : ");
+        double menitPlank = bacaDouble("Plank (menit)   : ");
+
+        if (menitLari < 0 || menitPushUp < 0 || menitPlank < 0) {
+            System.out.println("Lama waktu tidak boleh negatif.");
+            return;
+        }
+
+        // berbanding lurus dengan waktu
+        double kaloriLari = menitLari / 5 * 60;        // 60 kalori / 5 menit
+        double kaloriPushUp = menitPushUp / 30 * 200;  // 200 kalori / 30 menit
+        double kaloriPlank = menitPlank * 5;           // 5 kalori / 1 menit
+        double total = kaloriLari + kaloriPushUp + kaloriPlank;
+
+        System.out.println();
+        System.out.printf("Kalori lari    : %.2f kalori%n", kaloriLari);
+        System.out.printf("Kalori push-up : %.2f kalori%n", kaloriPushUp);
+        System.out.printf("Kalori plank   : %.2f kalori%n", kaloriPlank);
+        System.out.printf("Total kalori yang terbakar : %.2f kalori%n", total);
+    }
+
+    // ===================== SOAL 5 : TARIF DISNEY ISLAND =====================
+    static void soal5() {
+        int umur = bacaInt("Umur anak (tahun) : ");
+        int tinggi = bacaInt("Tinggi anak (cm) : ");
+
+        if (umur < 0 || tinggi <= 0) {
+            System.out.println("Umur dan tinggi harus bernilai positif.");
+            return;
+        }
+
+        int tarif;
+
+        if (umur < 1) {
+            System.out.println("Dilarang masuk");
+            return;
+        } else if (umur < 3) {
+            tarif = 30000;
+            if (umur >= 2 && tinggi > 70) {
+                tarif += 10000;
+            }
+        } else if (umur < 7) {
+            tarif = 40000;
+            if (umur >= 4 && tinggi > 120) {
+                tarif += 15000;
+            }
+        } else if (umur < 10) {
+            tarif = 50000;
+            if (umur >= 8 && tinggi > 150) {
+                tarif += 20000;
+            }
+        } else {
+            tarif = 80000;
+        }
+
+        System.out.println("Tarif masuk Disney Island : Rp " + formatRupiah(tarif));
+    }
+
+    static String formatRupiah(int angka) {
+        return String.format("%,d", angka).replace(',', '.');
+    }
+
+    // ===================== FUNGSI BANTU INPUT =====================
+    static String bacaString(String pesan) {
+        System.out.print(pesan);
+        if (!in.hasNextLine()) {
+            System.exit(0);
+        }
+        return in.nextLine().trim();
+    }
+
+    static int bacaInt(String pesan) {
+        while (true) {
+            try {
+                return Integer.parseInt(bacaString(pesan));
+            } catch (NumberFormatException e) {
+                System.out.println("Input harus berupa bilangan bulat.");
+            }
+        }
+    }
+
+    static double bacaDouble(String pesan) {
+        while (true) {
+            try {
+                return Double.parseDouble(bacaString(pesan).replace(',', '.'));
+            } catch (NumberFormatException e) {
+                System.out.println("Input harus berupa angka.");
+            }
+        }
+    }
+}
